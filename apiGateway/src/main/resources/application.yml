@@ -19,16 +19,22 @@ spring:
             preLogger: true
             postLogger: true
       routes:
-        - id: first-service
-          uri: http://localhost:8081/
+        - id: user-service
+          uri: lb://USER-SERVICE
           predicates:
-            - Path=/first-service/**
+            - Path=/user-service/**
           filters:
             - CustomFilter
-        - id: second-service
-          uri: http://localhost:8082/
+        - id: catalog-service
+          uri: lb://CATALOG-SERVICE
           predicates:
-            - Path=/second-service/**
+            - Path=/catalog-service/**
+          filters:
+            - CustomFilter
+        - id: order-service
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/order-service/**
           filters:
             - CustomFilter
 
