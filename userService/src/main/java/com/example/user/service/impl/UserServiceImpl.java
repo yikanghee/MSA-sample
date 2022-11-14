@@ -9,8 +9,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -65,6 +66,16 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
+    @Override
+    public UserDto getUserDetailsByEmails(String email) {
+
+        UserEntity userEntity = userRepository.findByEmail(email);
+        if (userEntity == null) {
+            throw new UsernameNotFoundException(email);
+        }
+        return new ModelMapper().map(userEntity, UserDto.class);
+    }
+
     public boolean isDuplicatedUserId(long userId) throws Exception {
 
         if (userRepository.findById(userId).isPresent()) {
@@ -74,5 +85,18 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        UserEntity userEntity = userRepository.findByEmail(username);
+        if (userEntity == null) {
+            throw new UsernameNotFoundException(username);
+        }
+
+        return new User(userEntity.getEmail() , userEntity.getEncryptedPwd(),
+                true, true,
+                true, true, new ArrayList<>());
+    }
 
 }
