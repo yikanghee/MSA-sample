@@ -5,9 +5,9 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHeaders;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -22,8 +22,11 @@ import java.security.Key;
 @Slf4j
 public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<AuthorizationHeaderFilter.Config> {
 
-    @Value("${jwt.value}")
-    private String value;
+    Environment env;
+
+    AuthorizationHeaderFilter(Environment env) {
+        this.env = env;
+    }
 
     public AuthorizationHeaderFilter() {
         super(Config.class);
@@ -56,7 +59,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         String subject = null;
 
         try {
-            Key secretKey = Keys.hmacShaKeyFor(value.getBytes(StandardCharsets.UTF_8));
+            Key secretKey = Keys.hmacShaKeyFor(env.getProperty("jwt.value").getBytes(StandardCharsets.UTF_8));
             JwtParserBuilder jwtParserBuilder = Jwts.parserBuilder();
             JwtParserBuilder jwtParserBuilder1 = jwtParserBuilder.setSigningKey(secretKey);
 

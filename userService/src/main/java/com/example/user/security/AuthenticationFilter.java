@@ -34,6 +34,12 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private UserService userService;
 
+    Environment env;
+
+    AuthenticationFilter(Environment env) {
+        this.env = env;
+    }
+
     public AuthenticationFilter(AuthenticationManager authenticationManager) {
         super.setAuthenticationManager(authenticationManager);
     }
@@ -70,7 +76,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         String username = ((User) authResult.getPrincipal()).getUsername();
         UserDto userDetails = userService.getUserDetailsByEmails(username);
 
-        Key secretKey = Keys.hmacShaKeyFor("userserviceuserserviceserserviceuserserviceuserserviceserservice".getBytes(StandardCharsets.UTF_8));
+        Key secretKey = Keys.hmacShaKeyFor(env.getProperty("jwt.value").getBytes(StandardCharsets.UTF_8));
 
         String token = Jwts.builder()
                 .setSubject(userDetails.getUserId())
