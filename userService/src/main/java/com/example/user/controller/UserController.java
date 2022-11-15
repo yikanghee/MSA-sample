@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,10 @@ public class UserController {
         UserDto userDto = mapper.map(user, UserDto.class);
 
         userService.createUser(userDto);
-        return new ResponseEntity(HttpStatus.CREATED);
+
+        ResponseUser responseUser = mapper.map(userDto, ResponseUser.class);
+
+        return new ResponseEntity<>(responseUser, HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/users")
@@ -53,7 +57,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    @GetMapping(value = "/users/{userId}")
+    @GetMapping(value = "/users/{userId}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<ResponseUser> getUser(@PathVariable("userId") String userId) {
         UserDto userDto = userService.getUserByUserId(userId);
         ResponseUser returnValue = new ModelMapper().map(userDto, ResponseUser.class);

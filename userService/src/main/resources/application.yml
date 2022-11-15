@@ -1,15 +1,18 @@
 server:
   port: 10001
 
-jwt:
-  auth:
-    time: 30000
-    value: userserviceuserserviceserserviceuserserviceuserserviceserservice
-  name: "X-TOKEN"
-
+#jwt:
+#  time: 30000
+#  value: userserviceuserserviceserserviceuserserviceuserserviceserservice
+#  name: "X-TOKEN"
 spring:
   application:
     name: user-service
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3307/msaProject?useUnicode=true&characterEncoding=utf-8
@@ -20,6 +23,13 @@ spring:
       ddl-auto: create-drop
     show-sql: true
     generate-ddl: true
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+  profiles:
+    active: dev
 
 eureka:
   instance:
@@ -34,3 +44,9 @@ eureka:
 logging:
   level:
     com.example.user: debug
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans, busrefresh
