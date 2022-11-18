@@ -31,13 +31,15 @@ public class UserController {
     }
 
     @PostMapping(value = "/users")
-    public ResponseEntity createUser(@RequestBody RequestUser user) {
+    public ResponseEntity<ResponseUser> createUser(@RequestBody RequestUser user) {
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        UserDto userDto = mapper.map(user, UserDto.class);
 
-        userService.createUser(userDto);
-        return new ResponseEntity(HttpStatus.CREATED);
+        UserDto userDto = mapper.map(user, UserDto.class);
+        userDto = userService.createUser(userDto);
+
+        ResponseUser responseUser = mapper.map(userDto, ResponseUser.class);
+        return new ResponseEntity<>(responseUser, HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/users")

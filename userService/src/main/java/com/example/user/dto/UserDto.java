@@ -15,6 +15,6 @@ public class UserDto {
     private String userId;
     private Date createdAt;
     private String encryptedPwd;
-    private List<ResponseOrder> responseOrders;
+    private List<ResponseOrder> orders;
 
 }

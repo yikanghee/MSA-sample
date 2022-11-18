@@ -59,7 +59,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         String subject = null;
 
         try {
-            Key secretKey = Keys.hmacShaKeyFor(env.getProperty("jwt.value").getBytes(StandardCharsets.UTF_8));
+            Key secretKey = Keys.hmacShaKeyFor("userserviceuserserviceserserviceuserserviceuserserviceserservice".getBytes(StandardCharsets.UTF_8));
             JwtParserBuilder jwtParserBuilder = Jwts.parserBuilder();
             JwtParserBuilder jwtParserBuilder1 = jwtParserBuilder.setSigningKey(secretKey);
 
