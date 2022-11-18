@@ -21,12 +21,6 @@ spring:
     password: guest
   cloud:
     gateway:
-      default-filters:
-        - name: GlobalFilter
-          args:
-            baseMessage: Spring Cloud Gateway Global Filter
-            preLogger: true
-            postLogger: true
       routes:
         - id: user-service
           uri: lb://USER-SERVICE
@@ -66,13 +60,11 @@ spring:
           predicates:
             - Path=/catalog-service/**
           filters:
-            - CustomFilter
         - id: order-service
           uri: lb://ORDER-SERVICE
           predicates:
             - Path=/order-service/**
           filters:
-            - CustomFilter
 
 management:
   endpoints:

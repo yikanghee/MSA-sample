@@ -1,6 +1,11 @@
 server:
   port: 8002
 
+jwt:
+  time: 30000
+  value: userserviceuserserviceserserviceuserserviceuserserviceserservice
+  name: "X-TOKEN"
+
 spring:
   application:
     name: order-service

@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -44,9 +45,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         super.setAuthenticationManager(authenticationManager);
     }
 
-    public AuthenticationFilter(AuthenticationManager authenticationManager, UserService userService) {
+    public AuthenticationFilter(AuthenticationManager authenticationManager, UserService userService, Environment env) {
         super.setAuthenticationManager(authenticationManager);
         this.userService = userService;
+        this.env = env;
     }
 
     @Override
@@ -76,7 +78,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         String username = ((User) authResult.getPrincipal()).getUsername();
         UserDto userDetails = userService.getUserDetailsByEmails(username);
 
-        Key secretKey = Keys.hmacShaKeyFor(env.getProperty("jwt.value").getBytes(StandardCharsets.UTF_8));
+        Key secretKey = Keys.hmacShaKeyFor("userserviceuserserviceserserviceuserserviceuserserviceserservice".getBytes(StandardCharsets.UTF_8));
 
         String token = Jwts.builder()
                 .setSubject(userDetails.getUserId())
