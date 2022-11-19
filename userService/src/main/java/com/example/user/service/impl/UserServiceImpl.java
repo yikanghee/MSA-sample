@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,8 +38,11 @@ public class UserServiceImpl implements UserService {
 
     private final RestTemplate restTemplate;
 
+    private final Environment env;
+
     @Override
     public UserDto createUser(UserDto userDto) {
+
         userDto.setUserId(UUID.randomUUID().toString());
 
         ModelMapper mapper = new ModelMapper();
@@ -61,7 +66,7 @@ public class UserServiceImpl implements UserService {
 
         UserDto userDto = new ModelMapper().map(userEntity, UserDto.class);
 
-        String orderUrl = String.format("http://127.0.0.1:8000/order-service/%s/orders", userId);
+        String orderUrl = String.format(env.getProperty("order_service.url"), userId);
 
         ResponseEntity<List<ResponseOrder>> orderListResponse =
                 restTemplate.exchange(orderUrl, HttpMethod.GET, null,
