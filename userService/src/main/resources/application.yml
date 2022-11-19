@@ -6,6 +6,8 @@ jwt:
   value: "userserviceuserserviceserserviceuserserviceuserserviceserservice"
   name: "X-TOKEN"
 
+order_service:
+  url: http://ORDER-SERVICE/order-service/%s/orders
 
 spring:
   application:

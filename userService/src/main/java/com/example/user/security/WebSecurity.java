@@ -21,7 +21,7 @@ public class WebSecurity {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserService userService;
 
-    Environment env;
+    private final Environment env;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 

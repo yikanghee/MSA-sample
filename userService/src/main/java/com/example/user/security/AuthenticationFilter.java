@@ -37,10 +37,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     Environment env;
 
-    AuthenticationFilter(Environment env) {
-        this.env = env;
-    }
-
     public AuthenticationFilter(AuthenticationManager authenticationManager) {
         super.setAuthenticationManager(authenticationManager);
     }
@@ -78,11 +74,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         String username = ((User) authResult.getPrincipal()).getUsername();
         UserDto userDetails = userService.getUserDetailsByEmails(username);
 
-        Key secretKey = Keys.hmacShaKeyFor("userserviceuserserviceserserviceuserserviceuserserviceserservice".getBytes(StandardCharsets.UTF_8));
+        Key secretKey = Keys.hmacShaKeyFor(env.getProperty("jwt.value").getBytes(StandardCharsets.UTF_8));
 
         String token = Jwts.builder()
                 .setSubject(userDetails.getUserId())
-                .setExpiration(new Date(System.currentTimeMillis() + 30000))
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("jwt.time"))))
                 .signWith(secretKey, SignatureAlgorithm.HS512)
                 .compact();
         response.addHeader("Authorization", token);
